@@ -1,4 +1,4 @@
-from app.domain.entities.restaurant import Restaurant
+from app.infrastructure.database.models.restaurant import Restaurant
 from app.interfaces.schemas.restaurant_schemas import RestaurantResponse
 
 
