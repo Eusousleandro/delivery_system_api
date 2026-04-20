@@ -1,21 +1,25 @@
 from pydantic import BaseModel, ConfigDict
 
-class UserBase(BaseModel):
+
+class RestaurantBase(BaseModel):
     name: str
     email: str
+    cnpj: str
     password: str
 
-class UserCreate(UserBase):
+class RestaurantCreate(RestaurantBase):
     pass
 
-class UserUpdate(BaseModel):
+class RestaurantUpdate(BaseModel):
     name: str | None
     email: str | None
+    cnpj: str | None
     password: str | None
 
-class UserResponse(BaseModel):
+class RestaurantResponse(BaseModel):
     id: int
     name: str
     email: str
+    cnpj: str
 
 model_config = ConfigDict(from_attributes=True)
