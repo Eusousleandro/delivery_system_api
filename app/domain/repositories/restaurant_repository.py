@@ -6,21 +6,21 @@ from app.domain.entities.restaurant import Restaurant
 class IRestaurantRespository(ABC):
 
     @abstractmethod
-    def get_all(self, restaurant: Restaurant) -> List[Restaurant]:
+    def get_all(self) -> List[Restaurant]:
         pass
 
     @abstractmethod
-    def get_restaurant_id(self, restaurant: Restaurant):
+    def get_restaurant_id(self, restaurant: Restaurant) -> List[Restaurant]:
         pass
 
     @abstractmethod
-    def create_restaurant(self, restaurant: Restaurant):
+    def create(self, restaurant: Restaurant) -> Restaurant:
         pass
 
     @abstractmethod
-    def update_restaurant(self, restaurant: Restaurant):
+    def update(self, restaurant: Restaurant) -> Restaurant:
         pass
 
     @abstractmethod
-    def delete_restaurant(self, restaurant: Restaurant):
+    def delete(self, id: int) -> None:
         pass
