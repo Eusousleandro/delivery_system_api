@@ -3,7 +3,7 @@ from typing import List
 
 from app.domain.entities.restaurant import Restaurant
 
-class IRestaurantRespository(ABC):
+class IRestaurantRepository(ABC):
 
     @abstractmethod
     def get_all(self) -> List[Restaurant]:
