@@ -1,0 +1,20 @@
+[project]
+name = "delivery-system-api"
+version = "0.1.0"
+description = "API de delivery de comida com gerenciamento de pedidos, usuários e restaurantes, incluindo autenticação e atualização de status em tempo real."
+authors = [
+    {name = "Leandro Sousa Silva",email = "ordnael.sousass@gmail.com"}
+]
+requires-python = ">=3.14"
+dependencies = [
+    "fastapi[standard] (>=0.136.0,<0.137.0)",
+    "pyjwt (>=2.12.1,<3.0.0)",
+    "pymysql (>=1.1.2,<2.0.0)",
+    "sqlalchemy (>=2.0.49,<3.0.0)",
+    "pwdlib[argon2] (>=0.3.0,<0.4.0)"
+]
+
+
+[build-system]
+requires = ["poetry-core>=2.0.0,<3.0.0"]
+build-backend = "poetry.core.masonry.api"
