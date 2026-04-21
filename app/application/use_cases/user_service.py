@@ -51,3 +51,4 @@ class UserService:
         if not delete_user:
             raise HTTPException(status_code=404, detail='The user could not be deleted.')
 
+        return delete_user
