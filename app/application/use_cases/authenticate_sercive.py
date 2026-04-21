@@ -4,11 +4,11 @@ from app.infrastructure.security.auth_service import create_access_token
 from app.interfaces.schemas.login_schemas import Login
 
 
-class Authenticate:
+class AuthentService:
     def __init__(self, repository: UserRepository):
         self.repository = repository
         
-    async def login(self, login: Login):
+    async def authenticate(self, login: Login):
         user = self.repository.get_user_email(login.email)
         if not user:
             raise NotFoundException()
