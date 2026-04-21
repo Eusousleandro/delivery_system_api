@@ -1,0 +1,14 @@
+class NotFoundException(Exception):
+    pass
+
+class AlreadyExistsException(Exception):
+    pass
+
+class CreatedonFailedException(Exception):
+    pass
+
+class UpdatedonFailedException(Exception):
+    pass
+
+class DeletionFailedException(Exception):
+    pass

@@ -1,54 +1,55 @@
-from fastapi import Depends, HTTPException
+from typing import List
 from sqlalchemy.orm import Session
 
+from app.domain.exceptions.exception import  AlreadyExistsException, CouldNotBeCreated, CreatedonFailedException, DeletionFailedException, NotFoundException, UpdatedonFailedException
 from app.infrastructure.repositories.user_repository_implementation import UserRepository
 from app.interfaces.mappers.user_mapper import to_user_response
 from app.interfaces.schemas.user_schema import UserCreate, UserUpdate
 
 
 class UserService:
-    def __init__(self, repository: UserRepository = Depends()):
+    def __init__(self, repository: UserRepository):
         self.repository = repository
 
-    async def get_all(self, db: Session):
-        users = await self.repository.get_all(db)
+    async def get_all(self) -> List[dict]:
+        users = await self.repository.get_all()
         if not users:
-            raise HTTPException('Users not found')
+            return []
+        
         return [to_user_response(u) for u in users]
 
-    async def get_user_id(self, db: Session, id: int):
-        user = await self.repository.get_user_id(db, id=id)
+    async def get_user_id(self, id: int) -> dict:
+        user = await self.repository.get_user_id(id)
         if not user:
-            raise HTTPException(status_code=401, detail='User not found')
+            raise NotFoundException()
         return to_user_response(user)
 
-    async def create(self, db: Session, user: UserCreate):
-        user_existing = await self.repository.get_user_id(db, email=user.email)
-        if user_existing:
-            raise HTTPException(status_code=400, detail='We were unable to create the user; the email address is already registered.')
+    async def create(self, user: UserCreate) -> dict:
+        user = await self.repository.get_user_email(user.email)
+        if user:
+            raise AlreadyExistsException()
+        created = await self.repository.create(user)
+        if not created:
+            raise CreatedonFailedException()
         
-        new_user = await self.repository.create(db, user=user)
-        if not new_user:
-            raise HTTPException(status_code=404, detail='User could not be created')
-        
-        return new_user
+        return created
     
-    async def update(self, db: Session, id: int, user: UserUpdate):
-        user_existing = await self.repository.get_user_id(db, id=id)
-        if not user_existing:
-            raise HTTPException(status_code=401, detail='User not found')
+    async def update(self, id: int, user: UserUpdate) -> dict:
+        user = await self.repository.get_user_id(id)
+        if not user:
+            raise NotFoundException()
         
-        user_update = await self.repository.update(db, user=user)
-        if not user_update:
-            raise HTTPException(status_code=404, detail='The user could not be updated.')
-
-    async def delete(self, db: Session, id: int):
-        user_existing = await self.repository.get_user_id(db, id=id)
-        if not user_existing:
-            raise HTTPException(status_code=401, detail='User not found')
+        sucess = await self.repository.update(user)
+        if not sucess:
+            raise UpdatedonFailedException()
+        return sucess
+    
+    async def delete(self, id: int) -> None:
+        user = await self.repository.get_user_id(id)
+        if not user:
+            raise NotFoundException()
         
-        delete_user = await self.repository.delete(db, id=id)
-        if not delete_user:
-            raise HTTPException(status_code=404, detail='The user could not be deleted.')
-
-        return delete_user
+        sucess = await self.repository.delete(id)
+        if not sucess:
+            raise DeletionFailedException()
+        return sucess
