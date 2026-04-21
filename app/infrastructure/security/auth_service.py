@@ -10,12 +10,15 @@ ACCESS_TOKEN_MINUTES = 30
 oauth2_scheme = OAuth2PasswordBearer(tokenUrl='/auth/login')
 
 class AuthService:
+    @staticmethod
     def get_current_user(token: str = Depends(oauth2_scheme)):
         try: 
             payload = jwt.decode(token, SECRET_KEY, algorithms=[ALGORITHM])
             user_email = payload.get('sub')
             if not user_email:
                 raise HTTPException(status_code=401, detail='Token invalid')
+        
+            return user_email
         
         except JWTError:
             raise HTTPException(status_code=401, detail="Token inválido")

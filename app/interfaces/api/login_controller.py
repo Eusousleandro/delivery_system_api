@@ -9,7 +9,7 @@ from app.interfaces.schemas.login_schemas import Login, TokenResponse
 
 router = APIRouter(prefix='/auth', tags=['Authentication'])
 
-@router.post('/', response_model=TokenResponse)
+@router.post('/login', response_model=TokenResponse)
 async def login(
     data: OAuth2PasswordRequestForm = Depends(),
     service: AuthentService = Depends(get_user_service)
