@@ -26,8 +26,8 @@ class UserService:
         return to_user_response(user)
 
     async def create(self, user: UserCreate) -> dict:
-        user = await self.repository.get_user_email(user.email)
-        if user:
+        user_existing = await self.repository.get_user_email(user.email)
+        if user_existing:
             raise AlreadyExistsException()
         
         user.password = AuthService.hash_password(user.password)
@@ -35,7 +35,7 @@ class UserService:
         if not created:
             raise CreatedonFailedException()
         
-        return created
+        return to_user_response(created)
     
     async def update(self, id: int, user: UserUpdate) -> dict:
         user = await self.repository.get_user_id(id)

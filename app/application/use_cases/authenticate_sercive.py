@@ -10,7 +10,7 @@ class AuthentService:
         self.repository = repository
         
     async def authenticate(self, login: Login):
-        user = self.repository.get_user_email(login.email)
+        user = await self.repository.get_user_email(login.email)
         if not user or user.password != login.password:
             raise HTTPException(status_code=401, detail="Invalid credentials")
         
