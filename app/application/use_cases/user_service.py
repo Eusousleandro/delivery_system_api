@@ -3,6 +3,7 @@ from sqlalchemy.orm import Session
 
 from app.domain.exceptions.exception import  AlreadyExistsException, CouldNotBeCreated, CreatedonFailedException, DeletionFailedException, NotFoundException, UpdatedonFailedException
 from app.infrastructure.repositories.user_repository_implementation import UserRepository
+from app.infrastructure.security.jwt_service import AuthService
 from app.interfaces.mappers.user_mapper import to_user_response
 from app.interfaces.schemas.user_schema import UserCreate, UserUpdate
 
@@ -28,6 +29,8 @@ class UserService:
         user = await self.repository.get_user_email(user.email)
         if user:
             raise AlreadyExistsException()
+        
+        user.password = AuthService.hash_password(user.password)
         created = await self.repository.create(user)
         if not created:
             raise CreatedonFailedException()
