@@ -4,6 +4,9 @@ class NotFoundException(Exception):
 class AlreadyExistsException(Exception):
     pass
 
+class CouldNotBeCreated(Exception):
+    pass
+
 class CreatedonFailedException(Exception):
     pass
 
