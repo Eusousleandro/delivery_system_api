@@ -15,6 +15,9 @@ class UserRepository(IUserRepository):
     async def get_user_id(self, id: int):
         return self.db.query(User).filter(User.id == id).first()
     
+    async def get_user_email(self, email: str):
+        return self.db.query(User).filter(User.email == email).first()
+
     async def create(self, user: User):
         new_user = User(**user.dict())
         self.db.add(new_user)

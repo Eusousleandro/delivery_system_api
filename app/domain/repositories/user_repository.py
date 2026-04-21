@@ -13,6 +13,9 @@ class IUserRepository(ABC):
     def get_user_id(self, id: int) -> Optional[User]:
         pass
 
+    def get_user_email(self, email: str) -> Optional[User]:
+        pass
+
     @abstractmethod
     def create(self, user: User) -> None:
         pass
