@@ -6,7 +6,8 @@ class Order(Base):
     __tablename__ = 'orders'
 
     id = Column(Integer, primary_key=True, index=True)
-    status = Column(String(250), nullable=False)
+    user_id = Column(Integer, nullable=False)
+    status = Column(String(50), nullable=False, default="PENDING")
     address = Column(String(250), nullable=False)
     delivery_fee = Column(Numeric(10, 2), default=0.0, nullable=False)
     payment_method = Column(String(250), nullable=False)
