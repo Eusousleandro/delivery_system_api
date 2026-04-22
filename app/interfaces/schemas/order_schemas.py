@@ -14,6 +14,9 @@ class OrderCreate(OrderBase):
     payment_method: str 
     items: List[OrderBase]
 
+class OrderUpdate(OrderBase):
+    pass
+
 class OrderItemResponse(OrderBase):
     total: float
 
