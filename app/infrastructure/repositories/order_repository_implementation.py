@@ -21,8 +21,8 @@ class OrderRepository(IOrderRepository):
         self.db.refresh(new_order)
         return new_order
     
-    async def update(self, id: int, order: OrderUpdate):
-        order_update = self.db.query(Order).filter(Order.id == id).first()
+    async def update_status(self, user_id: int, order: OrderUpdate):
+        order_update = self.db.query(Order).filter(Order.user_id == user_id).first()
         order_data = order.model_dump(exclude_unset=True)
 
         for key, value in order_data.items():
