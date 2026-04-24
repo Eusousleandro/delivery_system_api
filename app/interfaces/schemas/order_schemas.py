@@ -12,7 +12,8 @@ class OrderCreate(OrderBase):
     user_id: int
     address: str
     delivery_fee: float 
-    payment_method: str 
+    payment_method: str
+    payment_status: str 
     items: List[OrderBase]
 
 class OrderUpdate(OrderBase):
