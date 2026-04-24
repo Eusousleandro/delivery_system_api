@@ -2,7 +2,8 @@ from sqlalchemy.orm import Session
 
 from app.domain.repositories.order_repository import IOrderRepository
 from app.infrastructure.database.models.order import Order
-from app.interfaces.schemas.order_schemas import OrderBase, OrderCreate, OrderUpdate
+from app.interfaces.schemas.order_item_schemas import OrderItem
+from app.interfaces.schemas.order_schemas import OrderCreate, OrderUpdate
 
 class OrderRepository(IOrderRepository):
     def __init__(self, db: Session):
@@ -23,7 +24,7 @@ class OrderRepository(IOrderRepository):
         )
 
         new_order.items = [
-            OrderBase(**item.dict()) for item in data.items
+            OrderItem(**item.model_dump()) for item in data.items
         ]
 
         self.db.add(new_order)
