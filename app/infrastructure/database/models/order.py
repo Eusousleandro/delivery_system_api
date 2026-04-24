@@ -10,6 +10,9 @@ class Order(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, nullable=False)
+    product_id = Column(Integer, nullable=False)
+    quantity = Column(Integer, nullable=False)
+    price = Column(Numeric(10, 2), default=0.0)
     status = Column(String(50), nullable=False, default="PENDING")
     address = Column(String(250), nullable=False)
     delivery_fee = Column(Numeric(10, 2), default=0.0, nullable=False)
