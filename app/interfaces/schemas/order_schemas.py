@@ -1,37 +1,32 @@
 from datetime import datetime
 from typing import List
+from decimal import Decimal
 from pydantic import BaseModel, ConfigDict
 
-class OrderBase(BaseModel):
-    product_id: int
-    quantity: int
-    price: float
-    status: str
+from app.interfaces.schemas.order_item_schemas import OrderItemCreate, OrderItemResponse
 
-class OrderCreate(OrderBase):
+class OrderCreate(BaseModel):
     user_id: int
     address: str
-    delivery_fee: float 
+    delivery_fee: Decimal
     payment_method: str
-    payment_status: str 
-    items: List[OrderBase]
+    payment_status: str
+    items: List[OrderItemCreate]
 
-class OrderUpdate(OrderBase):
+class OrderUpdate(BaseModel):
     status: str
-
-class OrderItemResponse(OrderBase):
-    total: float
 
 class OrderResponse(BaseModel):
     id: int
     user_id: int
     status: str
     address: str
-    delivery_fee: float
-    total_price: float
+    delivery_fee: Decimal
     payment_method: str
     payment_status: str
+    total_price: Decimal
     items: List[OrderItemResponse]
     created_at: datetime
+    updated_at: datetime
 
 model_config = ConfigDict(from_attributes=True)

@@ -2,7 +2,6 @@ from sqlalchemy.orm import Session
 
 from app.domain.repositories.order_repository import IOrderRepository
 from app.infrastructure.database.models.order import Order
-from app.interfaces.schemas.order_item_schemas import OrderItem
 from app.interfaces.schemas.order_schemas import OrderCreate, OrderUpdate
 
 class OrderRepository(IOrderRepository):
@@ -15,22 +14,11 @@ class OrderRepository(IOrderRepository):
     async def get_order_id(self, id: int):
         return self.db.query(Order).filter(Order.id == id).first()
     
-    async def create(self, data: OrderCreate):
-        new_order = Order(
-            user_id=data.user_id,
-            address=data.address,
-            payment_method=data.payment_method,
-            payment_status=data.payment_status
-        )
-
-        new_order.items = [
-            OrderItem(**item.model_dump()) for item in data.items
-        ]
-
-        self.db.add(new_order)
+    async def create(self, order: Order):
+        self.db.add(order)
         self.db.commit()
-        self.db.refresh(new_order)
-        return new_order
+        self.db.refresh(order, ['items'])
+        return order
     
     async def update(self, user_id: int, order: OrderUpdate):
         order_update = self.db.query(Order).filter(Order.id == user_id).first()

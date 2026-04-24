@@ -1,6 +1,8 @@
 from typing import List
 
 from app.domain.exceptions.exception import AlreadyExistsException, CreatedonFailedException, DeletionFailedException, NotFoundException, UpdatedonFailedException
+from app.infrastructure.database.models.order import Order
+from app.infrastructure.database.models.order_items import OrderItem
 from app.infrastructure.repositories.order_repository_implementation import OrderRepository
 from app.interfaces.mappers.order_mapper import to_orders_reponse
 from app.interfaces.schemas.order_schemas import OrderCreate, OrderUpdate
@@ -25,12 +27,28 @@ class OrderService:
         
         return to_orders_reponse(order)
     
-    async def create(self, order: OrderCreate) -> dict:
+    async def create(self, data: OrderCreate) -> dict:
+        order = Order(
+            user_id=data.user_id,
+            address=data.address,
+            payment_method=data.payment_method,
+            payment_status=data.payment_status
+        )
+
+        order.items = [
+            OrderItem(
+                product_id=item.product_id,
+                quantity=item.quantity,
+                price=item.price,
+                status=item.status
+            )
+            for item in data.items
+        ]
         created_order = await self.repository.create(order)
         if not created_order: 
             raise CreatedonFailedException()
         
-        return created_order
+        return to_orders_reponse(created_order)
     
     async def update_order_status(self, order_id, user_id: int,
             order: OrderUpdate) -> dict:

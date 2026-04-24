@@ -27,7 +27,7 @@ async def get_order_id(
     
     return await service.get_order_id(id)
 
-@router.post('/')
+@router.post('/', response_model=OrderResponse)
 async def create(
     order: OrderCreate,
     current_user = Depends(AuthService.get_current_user),
