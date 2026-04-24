@@ -26,38 +26,34 @@ class OrderService:
         return to_orders_reponse(order)
     
     async def create(self, order: OrderCreate) -> dict:
-        order_existing = await self.repository.get_order_id(order.user_id)
-        if not order_existing:
-            raise NotFoundException()
-        
-        created_order = self.repository.create(order)
+        created_order = await self.repository.create(order)
         if not created_order: 
             raise CreatedonFailedException()
         
         return created_order
     
     async def update_order_status(self, order_id, user_id: int,
-            status: str, order: OrderUpdate) -> dict:
-        order_existing = await self.repository.get_order_id(id)
-        if order_existing:
-            raise AlreadyExistsException()
+            order: OrderUpdate) -> dict:
+        order_existing = await self.repository.get_order_id(order_id)
+        if not order_existing:
+            raise NotFoundException()
         
         await manager.send_to_user(
             user_id=user_id,
             message={
                 'event': 'ORDER_UPDATED',
                 'order_id': order_id,
-                'status': status
+                'status': order.status
             }
         )
         
-        order_update = await self.repository.update(order)
+        order_update = await self.repository.update(order_id, order)
         if not order_update:
             raise UpdatedonFailedException()
         
         return {'message': 'Order updated', 'Order:': order_update}
     
-    async def deleted(self, id: int) -> None:
+    async def delete(self, id: int) -> None:
         order_existing = await self.repository.get_order_id(id)
         if not order_existing:
             raise NotFoundException()

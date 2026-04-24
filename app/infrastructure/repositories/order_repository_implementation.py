@@ -15,14 +15,14 @@ class OrderRepository(IOrderRepository):
         return self.db.query(Order).filter(Order.id == id).first()
     
     async def create(self, order: Order):
-        new_order = Order(**order.dict())
+        new_order = Order(**order.model_dump())
         self.db.add(new_order)
         self.db.commit()
         self.db.refresh(new_order)
         return new_order
     
-    async def update_status(self, user_id: int, order: OrderUpdate):
-        order_update = self.db.query(Order).filter(Order.user_id == user_id).first()
+    async def update(self, user_id: int, order: OrderUpdate):
+        order_update = self.db.query(Order).filter(Order.id == user_id).first()
         order_data = order.model_dump(exclude_unset=True)
 
         for key, value in order_data.items():

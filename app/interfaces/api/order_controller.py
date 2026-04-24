@@ -1,3 +1,5 @@
+from typing import List
+
 from fastapi import APIRouter, Depends
 
 from app.application.use_cases.order_service import OrderService
@@ -8,8 +10,8 @@ from app.interfaces.schemas.order_schemas import OrderCreate, OrderResponse, Ord
 
 router = APIRouter(prefix='/orders', tags=['Orders'])
 
-@router.get('/', response_model=OrderResponse)
-async def get_All(
+@router.get('/', response_model=List[OrderResponse])
+async def get_orders(
     current_user = Depends(AuthService.get_current_user),
     service: OrderService = Depends(get_order_service)
 ):
@@ -27,12 +29,12 @@ async def get_order_id(
 
 @router.post('/')
 async def create(
-    order = OrderCreate,
+    order: OrderCreate,
     current_user = Depends(AuthService.get_current_user),
     service: OrderService = Depends(get_order_service)
 ):
     
-    return service.create(order)
+    return await service.create(order)
 
 @router.put('/{id}')
 async def update_status(
@@ -41,7 +43,11 @@ async def update_status(
     current_user = Depends(AuthService.get_current_user),
     service: OrderService = Depends(get_order_service)
 ): 
-    return await service.update_order_status(id, order)
+    return await service.update_order_status(
+        order_id=id,
+        user_id=current_user.id,
+        order=order
+    )
 
 @router.delete('/{id}')
 async def delete_order(

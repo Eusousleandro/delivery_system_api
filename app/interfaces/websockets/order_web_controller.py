@@ -3,7 +3,7 @@ from app.infrastructure.websockets.connection_manager import manager
 
 router = APIRouter()
 
-@router.websocket('/ws/ords/{user_id}')
+@router.websocket('/ws/orders/{user_id}')
 async def websocket_endpoint(websocket: WebSocket, user_id: int):
     await manager.connect(user_id, websocket)
     try: 

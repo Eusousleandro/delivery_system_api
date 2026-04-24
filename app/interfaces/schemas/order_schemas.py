@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 from typing import List
 from pydantic import BaseModel, ConfigDict
 
@@ -6,6 +6,7 @@ class OrderBase(BaseModel):
     product_id: int
     quantity: int
     price: float
+    status: str
 
 class OrderCreate(OrderBase):
     user_id: int
@@ -15,7 +16,7 @@ class OrderCreate(OrderBase):
     items: List[OrderBase]
 
 class OrderUpdate(OrderBase):
-    pass
+    status: str
 
 class OrderItemResponse(OrderBase):
     total: float
